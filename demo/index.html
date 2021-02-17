@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <title>collapsible-list demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script type="module" src="../collapsible-list.js"></script>
+    <style>
+        .blocks {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .block {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            white-space: normal;
+        }
+
+        .code {
+            padding: 20px;
+            color: #FFF;
+            background: #000;
+        }
+
+        .attributes {
+            padding-left: 20px;
+        }
+
+        body {
+            --black-color: #000000;
+            --background-color-close: grey;
+            --background-color-plus: grey;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div>
+        <main>
+        <h3>Basic Collapsible-List Demo</h3>
+        <div class="blocks">
+            <pre class="block code">
+          <code>
+            &lt;collapsible-list&gt;&lt;collapsible-list&gt;
+          </code>
+        </pre>
+            <pre class="block attributes">
+          <h3>Attributes</h3>
+          <ul>
+            <li>property1 (String)</li>
+            <li>property2 (Number)</li>
+          </ul>
+        </pre>
+        </div>
+
+        <h1>Collapsible-list</h1>
+        
+        <collapsible-list>
+            <h1 id="title" >company</h1>
+            <ul id="lista" >
+                <li>
+                    <ul>
+                        <div id="name">España</div>
+                        <div id="prefooterTitle">¿dónde estamos?</div>
+                        <div id="address">
+                            <a name="location" href="https://goo.gl/maps/p19G1ZwRENkP1PYW6">
+                                <span id="street">Castellana 81 Planta 7</span>
+                                <span id="cpCity">28046 Madrid</span>
+                            </a> 
+                            <a name="location" href="https://goo.gl/maps/RS56pEQ7rWwCrHJm6">
+                                <span id="street">Caleruega 102</span>
+                                <span id="cpCity">28033 Madrid</span>
+                            </a> 
+                        </div>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <div id="name">México</div>
+                        <div id="prefooterTitle">¿dónde estamos?</div>
+                        <div id="address">
+                            <a name="location" href="https://goo.gl/maps/wVXiAstGFXXyZF9Z9">
+                                <span id="street">Varsovia 36</span>
+                                <span id="cpCity">Col.Juárez, México City / DIF 06600</span>
+                            </a> 
+                        </div>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                    <div id="name">Perú</div>
+                    <div id="prefooterTitle">¿dónde estamos?</div>
+                    <div id="address">
+                        <a name="location" href="https://goo.gl/maps/syMoaiFYRMXXvcwbA">
+                            <span id="street">Casuarina 291</span>
+                            <span id="cpCity">15038, Los Sauces - Surquillo</span>
+                        </a> 
+                    </div>
+                    </ul>
+                </li>
+            </ul>
+        </ul>
+        </collapsible-list>
+    </main>
+    </div>
+</body>
+
+</html>

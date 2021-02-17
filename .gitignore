@@ -1,0 +1,4 @@
+*.polymer
+node_modules
+/dist/
+/build/
