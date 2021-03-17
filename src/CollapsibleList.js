@@ -20,18 +20,6 @@ export class CollapsibleList extends HTMLChildrenMixin(LitElement) {
        * @property
        * @type {Array}
        */
-      item: { type: Array },
-      /**
-       * 
-       * @property
-       * @type {Object}
-       */
-      items: { type: Object },
-      /**
-       * Boolean that determines if one of the elements of the collapsible is open.
-       * @property
-       * @type {Boolean}
-       */
       openList: { type: Boolean, reflect: true },
       /**
        * Boolean that determines if one of the elements of the collapsible is open.
@@ -76,7 +64,7 @@ export class CollapsibleList extends HTMLChildrenMixin(LitElement) {
   constructor() {
     super()
     this.open = 0;
-    this.item = [];
+    this.openingList = 0;
     this.openList= false;
     this.openItem = false;
     this.noBorder = false;
@@ -89,13 +77,26 @@ export class CollapsibleList extends HTMLChildrenMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this.item = this._HTMLChildren();
-    this.itemParagrah = Object.values(this.item);
-    console.log('object', this.listItem)
-    this.result = this.itemParagrah[1] ? 1 : 0;
-    this.action = this.itemParagrah[1] ? 0 : 1;
+    this.list = Object.values(this.item[0]);
   }
 
-  toggleList() {
+
+  toggleList(e) {
+    const numberId = e.currentTarget.id.split('list-')[1];
+    const parentList = e.currentTarget.parentNode.parentNode;
+    const list = parentList.querySelector(`div[id=unitList-${numberId}]`);
+    if(e.currentTarget){
+      if(list.hidden) {
+        list.removeAttribute('hidden');
+        this.openingList = +numberId;
+      } else {
+        list.setAttribute('hidden', false);
+        this.openingList = numberId;
+      }
+        const othersShow = Array.from(list.querySelectorAll('.unitList'))
+        .filter((ev) => ev.id.split('unitList-')[1] !== numberId);
+        othersShow.forEach((item) => { item.setAttribute('hidden', false)});
+    }
     this.openList = !this.openList;
   }
 
@@ -118,81 +119,81 @@ export class CollapsibleList extends HTMLChildrenMixin(LitElement) {
     this.openItem = !this.openItem;
   }
 
-  
-  render() {
+  renderTitle(event) {
     return html`
-        <div role="list" aria-label="listitem" class="collapsible-list ${this.noBorder ? "list__item list__item--no-border" : "list__item"} list" >
-            ${ this.itemParagrah[this.action] && html `
-            <div role="item" class="list__header">
-                <h2 class="list__title">${this.itemParagrah[0]}</h2>
-                <button
-                  aria-label="${this.openList ? "Abrir para ver lista" : "Cerrar"}"
-                  name="collipsable list button"
-                  class=" "
-                  @click="${this.toggleList}"
-                >
-                ${ this.openList ? html`
-                <img class="imgOpen" src="${ this.iconOpen }" alt="Icon Open"/>`: html`
-                <img class="imgClose" src="${ this.iconClose  }" alt="Icon Close"/>`}
-                </button>
-            </div> `}
-            <div role="listitem" ?hidden="${this.openList}" >
-              ${Object.values(this.itemParagrah[this.result]).map(
-                (element, index) => 
-                html`
-                <div role="item" class="collapsible ${this.noBorder? 'list__item list__item--no-border': 'list__item'}">
-                  <div class="list__header">
-                    <h2 class="list__title">${element[0].name}</h2>
-                      ${ element[0] && html`
-                      <button
-                        id="item-${index}"
-                        aria-label="${!this.openItem ? "Abrir para ver item direcciones" : "Cerrar"}
-                        name="collipsable unit button"
-                        @click="${this.toggleItem}"
-                        ?hidden="${element[0] ? false: true}">
-                          ${ this.open !== index ? html`<img class="imgOpen" src="${ this.iconOpen }" alt="Icon Open"/>`: 
-                            html`<img class="imgClose" src="${ this.iconClose  }" alt="Icon Close"/>`}
-                      </button>`}
-                      </div> 
-                          ${ !element[0] ?
-                            null : html `
-                            <div  id="unit-${index}" ?hidden="${this.open !== index }" class="unit"  >
-                                   ${element[0] && Object.values(element[0].address).map((e) => 
-                                   html`
-                                      <a
-                                        class="list__body-link"
-                                        aria-label="link"
-                                        href=${e.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        aria-label="Dirección de oficina, abre Google Maps en otra ventana"
-                                      >
-                                        <div class="list__body-description">
-                                          <img
-                                            class="list__body-description__icon"
-                                            src="${this.iconLocation}"
-                                            alt="ubication icon"
-                                            title="Icono de ubicación"
-                                          />
-                                          <div class="list__body-description__content">
-                                            <p class="address__element">${e.street}</p>
-                                            <p class="address__element">${e.cpCity}</p>
-                                          </div>
-                                        </div>
-                                      </a>
-                                    `
-                                  )} 
-                            </div>
-                            `
-                          } 
-                        </div>        
-                  `
-                )}
-             </div>
+        <div class="list__header">
+            <h1 class="list__title">${event.title}</h1>
         </div>
-      </div>
-    `;
-   }
-    
+          `  
   }
 
+  renderItemColapsibleList(event){
+    return html`
+    ${Object.values(event.list).map((item, index) => html`
+        <div   class="collapsible ${this.noBorder? 'list__item list__item--no-border': 'list__item'}">
+            <div class="list__header">
+                <h2 class="list__title">${item[0].name}</h2>
+                   ${ item[0] && html`
+                  <button id="item-${index}" aria-label="${!this.openItem ? "Open to view item addresses" : "Close"}
+                      name="collipsable unit button"  @click="${this.toggleItem}" ?hidden="${item[0] ? false: true}">
+                  ${ this.open !== index ? html`<img class="imgOpen" src="${ this.iconOpen }" alt="Icon Open"/>`: 
+                    html`<img class="imgClose" src="${ this.iconClose  }" alt="Icon Close"/>`}
+                  </button>`}
+            </div> 
+              ${ !item[0] ? null : html `
+                <div  id="unit-${index}" ?hidden="${this.open !== index }" class="unit"  >
+                       ${item[0] && Object.values(item[0].address).map((e) => {
+                         return html`
+                          <a role="link" class="list__body-link" aria-label="link" href=${e.href}
+                            target="_blank" rel="noopener noreferrer" aria-label="Address, open links in a new window">
+                            <div class="list__body-description">
+                              <img class="list__body-description__icon" src="${this.iconLocation}" alt="ubication icon"/>
+                              <div>
+                                <p >${e.street}</p>
+                                <p >${e.cpCity}</p>
+                              </div>
+                            </div>
+                          </a>`;
+                       } )}
+                </div>`}
+        </div>`)
+      }`
+
+  }
+
+  renderColapsibleList(event, i) {
+    return html `
+            <div class="list__header">
+                <h1 class="list__title">${event.title}</h1>
+                <button id="list-${i}" aria-label="${this.openList ? "Open to view list" : "Close"}"
+                  name="collipsable list button"  @click="${this.toggleList}">
+                ${ this.openingList !== i ? html`
+                      <img class="imgOpen" src="${ this.iconOpen }" alt="Icon Open"/>`: html`
+                      <img class="imgClose" src="${ this.iconClose  }" alt="Icon Close"/>`}
+                </button>
+            </div>
+            <div id="unitList-${i}"  class="unitList" ?hidden="${this.openingList !== i }"  >
+              ${this.renderItemColapsibleList(event)}
+            </div>`  
+  }
+
+
+  render() {
+    return html`
+        <ul  role="list" class=" collapsible-list ${this.noBorder ? "list__item list__item--no-border" : "list__item"} list" >
+            <li role= "listitem" >
+                  ${  Object.values(this.list).map((e, i) =>{
+                     if (Object.keys(e).length === 1 && e.title ) { 
+                          return this.renderTitle(e);
+                          } else if ( Object.keys(e).length === 1 && e.list ) {
+                              return this.renderItemColapsibleList(e);
+                          } else {
+                              return this.renderColapsibleList(e, i)
+                          }
+                      }) 
+                    }
+            </li>
+        </ul>`;
+   }
+    
+  };
